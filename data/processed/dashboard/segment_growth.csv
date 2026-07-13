@@ -1,0 +1,6 @@
+Segment,Same Quarter Last Year,Forecast (Next Quarter),YoY Growth %,CI Width % of Forecast,Ljung-Box p-value
+East,18043.0,53248.0,195.1,200.0,0.984
+Office Supplies,42972.0,60417.0,40.6,146.0,0.545
+West,50541.0,62828.0,24.3,125.0,0.641
+Technology,55690.0,66551.0,19.5,187.0,0.518
+Furniture,23598.0,24365.0,3.3,253.0,0.477

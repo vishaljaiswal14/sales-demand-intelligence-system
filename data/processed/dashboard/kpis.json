@@ -1,0 +1,22 @@
+{
+  "total_sales": 2261536.7827,
+  "total_orders": 4922,
+  "total_line_items": 9800,
+  "avg_order_value": 459.4751691791954,
+  "best_category": "Technology",
+  "best_category_sales": 827455.873,
+  "best_category_share_pct": 36.58821202156696,
+  "best_region": "West",
+  "best_region_sales": 710219.6845,
+  "first_year": 2015,
+  "last_year": 2018,
+  "growth_pct_last_vs_first_year": 50.472580538028055,
+  "recommended_model": "SARIMA",
+  "anomaly_weeks_total": 19,
+  "anomaly_weeks_zscore": 11,
+  "anomaly_weeks_iforest": 11,
+  "anomaly_weeks_both": 3,
+  "weeks_analyzed": 209,
+  "date_min": "2015-01-03",
+  "date_max": "2018-12-30"
+}

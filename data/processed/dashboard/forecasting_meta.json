@@ -1,0 +1,16 @@
+{
+  "sarima_order": [
+    1,
+    0,
+    1
+  ],
+  "sarima_seasonal_order": [
+    0,
+    1,
+    1,
+    12
+  ],
+  "sarima_ljung_box_pvalue": 0.44451796674528404,
+  "train_months": 45,
+  "test_months": 3
+}

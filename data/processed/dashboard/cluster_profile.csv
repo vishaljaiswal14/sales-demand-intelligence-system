@@ -1,0 +1,5 @@
+Cluster,TotalSales,MeanYoYGrowth,MonthlyVolatilityCV,AvgOrderValue,Sub-Categories,n,ClusterName
+0,37370.58,15.99,0.72,50.15,"Art, Envelopes, Fasteners, Furnishings, Labels, Paper",6,"Low Volume, Stable Demand"
+1,206925.79,21.54,0.76,362.29,"Accessories, Appliances, Binders, Bookcases, Chairs, Phones, Storage, Tables",8,"High Volume, Stable Demand"
+2,46420.31,192.84,2.03,252.28,Supplies,1,"Volatile, High-Growth Outlier"
+3,167743.36,46.34,1.5,1930.72,"Copiers, Machines",2,"High-Value, Growing Demand"

@@ -1,6 +1,6 @@
 # Sales Demand Intelligence System
 
-An end-to-end retail forecasting and demand intelligence system. Implements statistical time-series models, machine learning anomaly detection, and product segmentation on four years of historical transaction data, served via an interactive dashboard and an executive business report.
+A retail forecasting and demand intelligence system that processes historical transaction logs to automate demand planning, isolate operational anomalies, and segment product portfolios.
 
 <p align="center">
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.9%2B-blue?style=flat-square&logo=python&logoColor=white" alt="Python"></a>
@@ -35,9 +35,9 @@ An end-to-end retail forecasting and demand intelligence system. Implements stat
 
 ## Executive Overview
 
-This project implements a demand planning and business intelligence pipeline using four years of Superstore retail transaction data. Instead of relying on a single forecasting model, the system evaluates three distinct modeling methodologies (SARIMA, Prophet, and XGBoost) on chronological hold-out and rolling-origin backtests to select the most accurate model for production. 
+This system processes historical retail transaction logs to generate product-level forecasts, audit operations for anomalous order spikes, and classify inventory into target stocking cohorts. 
 
-Beyond high-level trends, the pipeline processes the transaction history to identify weekly anomalies via statistical and machine learning estimators (Z-score and Isolation Forest) and categorizes products into distinct stocking segments using K-Means clustering. The outputs are served through a sub-second load Streamlit dashboard and summarized in an executive report written for business stakeholders.
+To maximize forecast accuracy, the project evaluates and backtests three competing models (SARIMA, Prophet, and XGBoost) on a chronological hold-out set. The statistical outputs, clustering properties, and anomaly reports are served through a lightweight, pre-rendered Streamlit dashboard alongside a PDF business report.
 
 ![Dashboard Overview](docs/screenshots/overview.png)
 
@@ -45,33 +45,31 @@ Beyond high-level trends, the pipeline processes the transaction history to iden
 
 ## Motivation & Business Context
 
-In retail operations, inventory management is a major driver of cost and capital efficiency. Carrying excess inventory ties up working capital and increases storage costs, while stockouts result in lost revenue and reduced customer retention. 
+Retailers face a continuous optimization challenge: over-ordering binds working capital in inventory, while under-ordering triggers stockouts and customer churn. Balancing this trade-off requires answering concrete questions:
+- **Baseline Forecasting:** What are the expected sales volumes for next quarter across product categories and geographic regions?
+- **Exception Auditing:** Which weeks exhibited irregular demand spikes, and which customer orders drove those anomalies?
+- **Stocking Segmentation:** Which product sub-categories drive the bulk of revenue, and which are too volatile to stock under standard Min-Max rules?
 
-To balance this trade-off, planners require tools that answer specific operational questions:
-- **Trend and Scale:** What is the expected sales volume for the upcoming quarter by category and region?
-- **Operational Exceptions:** Which weeks showed abnormal transaction behavior, and what orders drove those anomalies?
-- **Inventory Classification:** How do different product lines behave in terms of volume and stability, and how should stocking policies adapt?
-
-This repository provides an empirical, data-driven approach to answering these questions. It replaces intuition-based planning with model-backed intervals and auditable statistical thresholds.
+This repository addresses these operational questions by mapping transaction logs to statistical forecasts, anomaly scores, and product classifications.
 
 ---
 
 ## Design Principles
 
-- **Decoupled Computation and Presentation:** The interactive application never runs model training or complex aggregations. All analytical steps are executed once, serialized to disk, and loaded read-only by the interface.
-- **Methodological Transparency:** Every model selection, anomaly threshold, and clustering configuration is supported by validation metrics in the primary Jupyter notebook.
-- **Strict Temporal Validation:** To prevent data leakage, all model evaluation uses time-based train-test splits and rolling-origin validation rather than random cross-validation.
+- **Decoupled Compute & Presentation:** The frontend dashboard never runs models or heavy aggregations. The analytical pipeline runs once, serializing results to disk for read-only consumption.
+- **Methodological Transparency:** Every parameter choice, anomaly threshold, and clustering hyperparameter is documented and validated inside the notebook, rather than assumed.
+- **Strict Temporal Validation:** To guarantee realistic performance, all models are evaluated using chronological hold-outs and rolling-origin backtests instead of random k-fold splits.
 
 ---
 
 ## Key Features
 
-- **Chronological Model Evaluation:** Evaluates SARIMA, Prophet, and XGBoost on a 12-month hold-out set and a rolling-origin backtest.
-- **Multi-Granular Forecasting:** Generates monthly category and region forecasts, separating baseline trends from seasonal variations.
-- **Dual-Estimator Anomaly Detection:** Combines Z-scores on rolling averages with an Isolation Forest model to isolate irregular weeks, mapping flags back to line-item orders.
-- **Demand Segmentation:** Clusters product sub-categories based on revenue contribution and demand volatility, generating concrete stocking rules.
-- **High-Performance App:** A Streamlit dashboard that serves pre-computed JSON and CSV artifacts, ensuring fast loads and UI consistency.
-- **Executive Summary:** A formal report (`reports/Executive_Business_Report.pdf`) focused on business findings and operational recommendations.
+- **Forecasting:** Evaluates SARIMA, Prophet, and XGBoost on a 12-month chronological hold-out set and a rolling-origin backtest.
+- **Aggregation:** Generates monthly category and regional forecasts, separating baseline trends from seasonal patterns.
+- **Anomaly Detection:** Combines rolling Z-scores and Isolation Forest models to isolate irregular transaction weeks, mapping outliers back to the underlying customer orders.
+- **Segmentation:** Groups product sub-categories using K-Means clustering based on revenue contribution and demand volatility to recommend target stocking rules.
+- **Dashboard Visualization:** Serves pre-computed metrics and Plotly charts via a Streamlit interface, bypassing slow run-time calculations.
+- **Executive Reporting:** Summarizes analytical findings and business recommendations in a stakeholder-ready PDF report.
 
 ---
 
@@ -85,11 +83,11 @@ raw data ──▶ src/ pipelines ──▶ processed datasets ──▶ analysi
                    └──▶ src/dashboard/artifacts.py ──▶ dashboard artifacts ──▶ Streamlit app
 ```
 
-### Engineering Decisions:
+The directory structure and execution workflow are designed around three principles: a single source of truth, decoupled runtimes, and reproducible narrative.
 
-1. **Why `src/` Exists:** To avoid notebook bloat, all core algorithms, data loaders, feature engineering pipelines, and visualization styles are defined in clean Python modules. This allows the same logic to be shared by the analysis notebook and the dashboard builder, ensuring consistency.
-2. **Why the Notebook Exists:** `analysis.ipynb` serves as the research and narrative layer. It documents the exploratory data analysis, parameter search space, diagnostic checks (such as ACF/PACF plots), and model comparison details.
-3. **Decoupling Modeling from Streamlit:** Streamlit is designed for quick rendering but lacks a built-in state machine for long-running mathematical operations. Running models like Prophet or SARIMA on page load would cause slow execution and introduce runtime instabilities. Instead, the model artifacts are serialized beforehand by `src/dashboard/artifacts.py` into lightweight JSON/CSV formats, allowing the Streamlit app to load instantly.
+- **Single Source of Truth (`src/`):** All modeling, loading, feature engineering, and styling logic is written once in pure Python modules under `src/`. The Jupyter notebook and the dashboard builder both import these identical packages. This eliminates duplicate business logic and ensures that research code and production dashboard metrics cannot drift.
+- **Decoupled Compute & Presentation (Artifact Serialization):** Running time-series modeling (like fitting SARIMA or Prophet) at page load is a bad engineering practice. It introduces performance lag and state instability. To solve this, the pipeline separates model fitting from user interaction. `artifacts.py` runs the models offline, serializes outputs into lightweight JSON/CSV files, and the Streamlit app reads these precomputed files. The dashboard acts as a pure, fast presentation layer.
+- **Separation of Narrative and Code:** The Jupyter notebook (`analysis.ipynb`) serves as the research history, documenting EDA, statistical diagnostic checks (such as residuals tests), and methodology validation. It is designed to be executed from top to bottom for auditability. Meanwhile, the dashboard (`app.py`) is optimized for interactive stakeholder interrogation.
 
 ---
 
@@ -98,23 +96,23 @@ raw data ──▶ src/ pipelines ──▶ processed datasets ──▶ analysi
 ```
 sales-demand-intelligence-system/
 ├── data/
-│   ├── raw/                     # Raw transaction history (train.csv)
-│   └── processed/               # Cleaned datasets and serialized dashboard artifacts
+│   ├── raw/                  # Raw transaction history (train.csv)
+│   └── processed/            # Cleaned data files and serialized dashboard artifacts
 ├── src/
-│   ├── data/                     # Ingestion, quality checks, and aggregation pipelines
-│   ├── features/                 # Temporal feature engineering and EDA helpers
-│   ├── models/                   # SARIMA, Prophet, XGBoost, anomalies, and K-Means models
-│   ├── visualization/            # Custom matplotlib/seaborn chart builders and styling
-│   ├── utils/                    # Shared system path helpers
-│   └── dashboard/                # Streamlit views, layouts, custom themes, and figures
-├── charts/                       # PNG figures generated by the analysis notebook
+│   ├── data/                 # Ingestion, quality audits, and aggregation pipelines
+│   ├── features/             # Feature engineering and EDA calculations
+│   ├── models/               # Forecasting, anomaly, and clustering implementations
+│   ├── visualization/        # Matplotlib/Seaborn custom plotting functions
+│   ├── utils/                # Shared path mapping helpers
+│   └── dashboard/            # Streamlit view rendering, theme, and Plotly figures
+├── charts/                   # Exported high-resolution figures for reports
 ├── docs/
-│   └── screenshots/             # Reference screenshots of the Streamlit dashboard
+│   └── screenshots/          # Dashboard layout screenshots
 ├── reports/
-│   └── Executive_Business_Report.pdf  # Executive summary and business report
-├── analysis.ipynb                # Main analysis notebook (tasks 1-6)
-├── app.py                        # Streamlit dashboard entry point
-└── requirements.txt              # Project dependency file
+│   └── Executive_Business_Report.pdf # Formal PDF report for business stakeholders
+├── analysis.ipynb            # Analytical notebook documenting the research workflow
+├── app.py                    # Streamlit entry point script
+└── requirements.txt          # Python dependency specifications
 ```
 
 ---
@@ -123,13 +121,13 @@ sales-demand-intelligence-system/
 
 | Category | Technologies | Purpose |
 | :--- | :--- | :--- |
-| **Programming Language** | Python (3.9+) | Base execution runtime for pipelines and dashboard application. |
-| **Data Processing** | pandas, NumPy, SciPy | Ingestion, data cleaning, datetime index management, resampling, and vector operations. |
-| **Time Series & Forecasting** | statsmodels, Prophet, XGBoost | SARIMA modeling, classical decomposition, additive regression, and gradient-boosted tree forecasting. |
-| **Machine Learning** | scikit-learn | Isolation Forest for anomaly detection and K-Means clustering for demand classification. |
-| **Data Visualization** | Plotly, Matplotlib, Seaborn | Interactive dashboard graphics, and static publication-quality figures for the notebook/report. |
-| **Dashboard Interface** | Streamlit | Multi-page layout, themes, and interactive dashboard state rendering. |
-| **Notebook & Environment** | Jupyter Notebook | Narrative workflow orchestration, modeling iteration, and diagnostic checks. |
+| **Core Runtime** | Python (3.9+) | Base programming language for pipeline and interface development. |
+| **Data Engineering** | pandas, NumPy, SciPy | Ingestion, data validation, temporal aggregation, and numeric computations. |
+| **Time Series Forecasting** | statsmodels, Prophet, XGBoost | SARIMA, seasonal-trend decomposition, additive models, and gradient boosting. |
+| **Unsupervised Learning** | scikit-learn | Isolation Forest for anomaly detection; K-Means for demand segmentation. |
+| **Visualization** | Plotly, Matplotlib, Seaborn | Custom static narrative figures and interactive dashboard plots. |
+| **Application Layer** | Streamlit | Multi-page dashboard framework and theme engine. |
+| **Environment** | Jupyter Notebook | Interactive model validation and reproducible research narrative. |
 
 ---
 
@@ -138,12 +136,14 @@ sales-demand-intelligence-system/
 Ensure Python 3.9 or higher is installed. 
 
 ### 1. Clone the Repository
+Clone the source code to your local machine:
 ```bash
 git clone https://github.com/vishaljaiswal14/sales-demand-intelligence-system.git
 cd sales-demand-intelligence-system
 ```
 
-### 2. Configure Virtual Environment
+### 2. Configure the Virtual Environment
+Set up an isolated environment and install the required dependencies:
 ```bash
 python -m venv .venv
 source .venv/bin/activate          # On Windows: .venv\Scripts\activate
@@ -151,33 +151,37 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 3. Place Data Asset
-The raw transaction dataset is not checked into version control. Download the [Superstore Sales dataset](https://www.kaggle.com/datasets/rohitsahoo/sales-forecasting) from Kaggle and place the raw file in the `data/raw/` directory as `train.csv`.
+### 3. Retrieve and Place the Dataset
+The raw transaction dataset is not checked into version control. Download the raw data:
+1. Visit [Superstore Sales dataset on Kaggle](https://www.kaggle.com/datasets/rohitsahoo/sales-forecasting).
+2. Download the dataset and copy the `train.csv` file into the `data/raw/` directory.
 
 ---
 
 ## Usage & Execution Workflow
 
-### 1. Run the Narrative Analysis
-To review or run the analytical steps, open the Jupyter environment:
+The codebase is designed as a pipeline. First, run the notebook for narrative research and validation. Next, compile the modeling outputs into static files. Finally, run the Streamlit app to visualize them.
+
+### 1. Narrative Analysis & Model Validation
+Start Jupyter and execute the narrative notebook to review the exploratory analysis, statistical diagnostics (ADF, ACF/PACF, residuals tests), and baseline model comparisons:
 ```bash
 jupyter notebook analysis.ipynb
 ```
-Executing the notebook from top to bottom executes data audits, feature extraction, model evaluations, anomaly identification, and exports all figures to the `charts/` directory.
+Running the cells exports high-resolution figures to the `charts/` folder and saves processed features.
 
-### 2. Generate Dashboard Artifacts
-Before running the dashboard, serialize the pipeline results to disk. This runs the data aggregation, training, anomaly detection, and clustering pipelines, writing the final JSON and CSV outputs to `data/processed/dashboard/`.
+### 2. Build Dashboard Artifacts
+Generate and cache the predictions, anomaly labels, and product segments. This execution runs the models offline, saving the results under `data/processed/dashboard/`:
 ```bash
 python3 -m src.dashboard.artifacts
 ```
-*Note: The dashboard app requires these artifacts to run; launching the dashboard without executing this step will cause data loading errors.*
+*Note: The Streamlit app relies on these precomputed artifacts. You must run this command before launching the dashboard.*
 
-### 3. Launch the Dashboard
-Run the Streamlit server locally:
+### 3. Launch the Streamlit Dashboard
+Start the local web server to explore the results interactively:
 ```bash
 streamlit run app.py
 ```
-This opens the multi-page dashboard in your default browser at `http://localhost:8501`.
+Open `http://localhost:8501` in your browser to view the multi-page application.
 
 ---
 
@@ -185,15 +189,15 @@ This opens the multi-page dashboard in your default browser at `http://localhost
 
 The dashboard contains distinct view pages matching specific operational goals:
 
-- **Sales Forecasting View:** Displays model fits and quarterly predictions along with statistical confidence intervals.
+- **Sales Forecasting Page:** Side-by-side performance evaluation of SARIMA, Prophet, and XGBoost on hold-out periods, complete with prediction intervals.
   
   ![Forecasting Screenshot](docs/screenshots/forecasting.png)
 
-- **Anomaly Detection View:** Displays anomalous weeks side-by-side from the rolling Z-score and Isolation Forest pipelines, with detailed order breakdowns.
+- **Anomaly Detection Page:** Weekly sales irregularities identified via rolling Z-score and Isolation Forest pipelines, showing order-level audit logs.
   
   ![Anomaly Detection Screenshot](docs/screenshots/anomalies.png)
 
-- **Demand Segmentation View:** Plots the K-Means clusters and lists custom stocking recommendations (e.g., JIT, Safety Stock) based on cluster profiles.
+- **Product Clustering Page:** Product sub-categories partitioned into demand segments using K-Means, mapping profiles directly to operational stocking rules.
   
   ![Clustering Screenshot](docs/screenshots/clustering.png)
 
@@ -216,18 +220,14 @@ The dashboard contains distinct view pages matching specific operational goals:
 
 ## Engineering Roadmap
 
-1. **Incorporate External Regressors:** Integrate local marketing campaign calendars and major regional holidays (e.g., Black Friday) as exogenous variables to improve holiday forecasts.
-2. **Model Retraining and Drift Alerts:** Implement an automated retraining schedule (cron) that monitors Mean Absolute Percentage Error (MAPE) drift and flags when models require hyperparameter adjustment.
-3. **Production Deployment:** Containerize the dashboard using Docker and deploy to a cloud instance (e.g., AWS ECS or GCP Cloud Run), using cached storage buckets for data artifacts.
-4. **Near-Real-Time Anomalies:** Move the weekly batch anomaly detection script to a streaming or daily ingest pipeline to identify data entry errors or sudden order surges within 24 hours of occurrence.
+1. **Exogenous Feature Expansion:** Integrate promotional calendars and public holidays into the Prophet and XGBoost pipelines to improve forecast response during peak promotional events.
+2. **Continuous Training & Performance Monitoring:** Build a scheduled execution script (cron) to monitor forecast accuracy drift, computing error metrics (MAPE/RMSE) on incoming data and triggering model refitting if performance falls below a set baseline.
+3. **Containerized Deployment:** Package the dashboard application into a Docker container and set up a deployment configuration for cloud hosting (e.g., AWS ECS or GCP Cloud Run), utilizing shared cloud storage for the precomputed artifacts.
+4. **Low-Latency Anomaly Monitoring:** Shift the anomaly detection script from batch execution to a daily pipeline, alerting operations planners to bulk order entry errors or sudden demand shifts within 24 hours.
 
 ---
 
 ## Data Sources & Methodology Notes
 
 ### Excluded Supplementary Datasets
-During the exploratory and methodology planning phase, a supplementary Video Game Sales dataset from Kaggle was evaluated. This dataset was intentionally excluded from the final pipeline for the following reasons:
-- **No Logical Join Keys:** The dataset shared no customer, temporal, or product attributes with the retail Superstore transactional data.
-- **Arbitrary Merging:** Merging the two datasets would require generating artificial mapping keys, which would introduce synthetic noise into the time-series history rather than providing genuine analytical insights.
-
-All details of this evaluation and the decision to maintain a single-source dataset are documented at the beginning of Task 5 in the analysis notebook.
+During the exploratory and planning phases, a supplementary Video Game Sales dataset was evaluated for cross-domain integration. It was excluded from the final model pipeline because it shares no logical join keys or temporal overlap with the Superstore transaction log. Merging the datasets would have been forced, introducing synthetic noise rather than adding explanatory power. The evaluation and rationale for using a single-source dataset are documented in the methodology discussion within [analysis.ipynb](file:///Users/vishaljaiswal/Desktop/SalesForecasting_VishalJaiswal/analysis.ipynb).

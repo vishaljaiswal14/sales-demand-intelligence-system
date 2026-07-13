@@ -1,6 +1,6 @@
 # Sales Demand Intelligence System
 
-A retail forecasting and demand intelligence system that automates demand planning, audits transaction logs for operational anomalies, and segments product portfolios.
+End-to-end retail demand intelligence platform combining statistical forecasting, anomaly detection, product segmentation, and interactive business intelligence.
 
 <p align="center">
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.9%2B-blue?style=flat-square&logo=python&logoColor=white" alt="Python"></a>
@@ -12,18 +12,24 @@ A retail forecasting and demand intelligence system that automates demand planni
   <a href="https://xgboost.readthedocs.io/"><img src="https://img.shields.io/badge/XGBoost-ML-2F80ED?style=flat-square" alt="XGBoost"></a>
   <a href="https://plotly.com/"><img src="https://img.shields.io/badge/Plotly-Charts-3F4F75?style=flat-square&logo=plotly&logoColor=white" alt="Plotly"></a>
   <a href="https://streamlit.io/"><img src="https://img.shields.io/badge/Streamlit-App-FF4B4B?style=flat-square&logo=streamlit&logoColor=white" alt="Streamlit"></a>
-  <a href="https://jupyter.org/"><img src="https://img.shields.io/badge/Jupyter-Notebook-orange?style=flat-square&logo=jupyter&logoColor=white" alt="Jupyter Notebook"></a>
 </p>
 
 <p align="center">
-  <a href="https://sales-demand-intelligence-system-9qruggze9cgxvu6k6nimqw.streamlit.app/"><b>🚀 Deployed Live Dashboard</b></a>
+  <a href="https://sales-demand-intelligence-system-9qruggze9cgxvu6k6nimqw.streamlit.app/"><b>Live Dashboard</b></a>
   &nbsp;•&nbsp;
-  <a href="reports/Executive_Business_Report.pdf"><b>📄 Executive Report (PDF)</b></a>
+  <a href="reports/Executive_Business_Report.pdf"><b>Executive Report (PDF)</b></a>
   &nbsp;•&nbsp;
-  <a href="analysis.ipynb"><b>📓 Analysis Notebook</b></a>
+  <a href="analysis.ipynb"><b>Analysis Notebook</b></a>
   &nbsp;•&nbsp;
-  <a href="https://github.com/vishaljaiswal14/sales-demand-intelligence-system"><b>⭐ GitHub Repository</b></a>
+  <a href="https://github.com/vishaljaiswal14/sales-demand-intelligence-system"><b>GitHub Repository</b></a>
 </p>
+
+---
+
+## Project Status
+* **Status:** Completed
+* **Deployment:** Active (Streamlit Community Cloud)
+* **Reproducibility:** 100% executable from raw data
 
 ---
 
@@ -45,6 +51,8 @@ A retail forecasting and demand intelligence system that automates demand planni
 - [Engineering Decisions](#engineering-decisions)
 - [Future Improvements](#future-improvements)
 - [Data Sources & Methodology Notes](#data-sources--methodology-notes)
+- [License](#license)
+- [Author](#author)
 
 ---
 
@@ -58,12 +66,12 @@ This project implements a demand planning pipeline using four years of historica
 
 ## Project Highlights
 
-* **Multi-Model Pipeline:** Evaluates SARIMA, Prophet, and XGBoost models against chronological hold-out splits.
-* **Dual-Method Anomaly Detection:** Cross-checks statistical rolling Z-scores against a multi-dimensional Isolation Forest.
-* **K-Means Demand Segmentation:** Groups products by revenue and volatility to assign distinct stocking rules.
-* **Decoupled Architecture:** Serializes pipeline predictions to disk to enable sub-second dashboard loading.
-* **Stakeholder Reporting:** Delivers findings in a PDF executive report formatted for non-technical leadership.
-* **Full Reproducibility:** Entire modeling process runs sequentially from raw logs in a single Jupyter notebook.
+* **Forecasting Pipeline:** Chronological evaluation of SARIMA, Prophet, and XGBoost models.
+* **Dual Anomaly Detection:** Rolling Z-scores paired with multi-dimensional Isolation Forests.
+* **Demand Segmentation:** K-Means clustering mapping SKU portfolios to stocking rules.
+* **Interactive Dashboard:** Sub-second layout rendering serving pre-computed pipeline artifacts.
+* **Executive Report:** Documented methodology and decisions formatted for stakeholders.
+* **Fully Reproducible:** Sequential execution from raw transactions to final predictions.
 
 ---
 
@@ -114,9 +122,27 @@ This project provides an empirical framework to address these questions using hi
 The project separates source code, documentation, and data assets to ensure clean separation of concerns:
 
 ```
-raw data ──▶ src/ pipelines ──▶ processed datasets ──▶ analysis.ipynb (notebook + charts)
-                   │                                        │
-                   └──▶ src/dashboard/artifacts.py ──▶ dashboard artifacts ──▶ Streamlit app
+Raw Data
+    │
+    ▼
+Data Processing
+    │
+    ▼
+Feature Engineering
+    │
+    ├─────────────► Forecasting Models
+    ├─────────────► Anomaly Detection
+    └─────────────► Product Segmentation
+             │
+             ▼
+Notebook Outputs
+             │
+             ├────────► Dashboard Artifacts
+             │               │
+             │               ▼
+             │        Streamlit Dashboard
+             │
+             └────────► Executive Report
 ```
 
 ### Engineering Rationale
@@ -180,16 +206,20 @@ sales-demand-intelligence-system/
 ### Application Layer
 [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)](https://streamlit.io/)
 
-### Development
-[![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange?style=flat-square&logo=jupyter&logoColor=white)](https://jupyter.org/)
+### Development Tools
+[![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white)](https://git-scm.com/)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/)
+[![Jupyter](https://img.shields.io/badge/Jupyter-orange?style=flat-square&logo=jupyter&logoColor=white)](https://jupyter.org/)
 
 ---
 
 ## Installation & Setup
 
 ### Prerequisites
-* Python 3.9 or higher.
-* A Kaggle account (to download the dataset).
+* **Python 3.9+** (base runtime environment)
+* **Git** (version control client)
+* **pip** (Python package manager)
+* **Kaggle Account** (to download raw source data)
 
 ### Clone the Repository
 ```bash
@@ -246,7 +276,7 @@ Open `http://localhost:8501` in your browser to access the multi-page user inter
 
 <p align="center">
   <a href="https://sales-demand-intelligence-system-9qruggze9cgxvu6k6nimqw.streamlit.app/">
-    <img src="https://img.shields.io/badge/🚀%20Access%20Live%20Streamlit%20Dashboard-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit App">
+    <img src="https://img.shields.io/badge/Live%20Streamlit%20Dashboard-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit App">
   </a>
 </p>
 
@@ -256,19 +286,19 @@ This interactive Streamlit dashboard runs in the cloud. It loads the precompiled
 
 ## Dashboard Showcase
 
-### 1. Executive Sales Overview
+### Executive Overview
 An interactive review of operational metrics, historical sales trends, fulfillment times, and regional performance.
 ![Overview](docs/screenshots/overview.png)
 
-### 2. Time-Series Forecasting
+### Forecasting
 Side-by-side performance evaluation of SARIMA, Prophet, and XGBoost models against chronological hold-out test periods.
 ![Forecasting](docs/screenshots/forecasting.png)
 
-### 3. Operational Anomaly Auditing
+### Anomaly Detection
 Weekly demand screening combining rolling statistical Z-scores and Isolation Forests, showing transaction-level logs for each outlier.
 ![Anomalies](docs/screenshots/anomalies.png)
 
-### 4. Demand Segmentation & Inventory Policy
+### Product Clustering
 K-Means clustering categorizes product sub-categories into demand cohorts and suggests stocking rules (e.g., Just-In-Time vs. Safety Stock).
 ![Clustering](docs/screenshots/clustering.png)
 
@@ -280,7 +310,7 @@ K-Means clustering categorizes product sub-categories into demand cohorts and su
 | :--- | :--- | :--- |
 | **Scale** | 9,800 transactions, 4,922 unique orders, $2.26M revenue | Baseline business volume metrics. |
 | **Growth** | +50.5% annual revenue (2018 vs. 2015), concentrated in 2017–2018 | High-growth operational demand context. |
-| **Top Segment** | Technology category (36.6% of revenue); West region ($710K) | Focus area for high-value SKU management. |
+| **Top Category** | Technology category (36.6% of revenue); West region ($710K) | Focus area for high-value SKU management. |
 | **Seasonality** | September, November, and December rank top-three in all years | Guides seasonal inventory buildup timing. |
 | **Forecasting** | SARIMA(1,0,1)(0,1,1)₁₂ selected; rolling-origin backtest MAPE: 17.7% | Minimizes estimation error against Prophet (18.0%) and XGBoost (20.4%). |
 | **Next Quarter** | Projected 2019 Q1: $50.1K (Jan), $35.7K (Feb), $69.7K (Mar) | Target demand levels for inventory planning. |
@@ -301,14 +331,30 @@ K-Means clustering categorizes product sub-categories into demand cohorts and su
 
 ## Future Improvements
 
-1. **Exogenous Variables:** Integrate regional marketing schedules and promotional events into Prophet and XGBoost to capture sudden demand spikes.
-2. **Performance Monitoring & Retraining:** Establish a monitoring script to compute prediction drift (e.g., tracking MAPE degradation over time) and trigger pipeline runs when accuracy slips.
-3. **Containerized Deployment:** Package the application using Docker for cloud hosting (AWS ECS or GCP Cloud Run), storing serialized artifacts in shared object storage.
-4. **Automated Audits:** Transition the batch anomaly detection pipeline to run daily on incoming transaction streams, enabling near-real-time discovery of data entry errors or order spikes.
+1. **Exogenous Variables:** Integrate regional marketing schedules and promotional events into Prophet and XGBoost.
+2. **Performance Monitoring & Retraining:** Establish a monitoring script to compute prediction drift and trigger pipeline runs when accuracy slips.
+3. **Containerized Deployment:** Package the application using Docker for cloud platform hosting.
+4. **Automated Audits:** Transition the anomaly pipeline to run daily on transaction streams, enabling near-real-time discovery of order spikes.
 
 ---
 
 ## Data Sources & Methodology Notes
 
-### Excluded Supplementary Datasets
-During the exploratory and planning phases, a supplementary Video Game Sales dataset was evaluated for cross-domain integration. It was excluded from the final model pipeline because it shares no logical join keys or temporal overlap with the Superstore transaction log. Merging the datasets would have been forced, introducing synthetic noise rather than adding explanatory power. The evaluation and rationale for using a single-source dataset are documented in the methodology discussion within [analysis.ipynb](file:///Users/vishaljaiswal/Desktop/SalesForecasting_VishalJaiswal/analysis.ipynb).
+### Methodology Notes
+During the exploratory and planning phases, a supplementary Video Game Sales dataset was evaluated for cross-domain integration. It was excluded from the final model pipeline because it shares no logical join keys or temporal overlap with the Superstore transaction log. Merging the datasets would have been forced, introducing synthetic noise rather than adding explanatory power. The evaluation and rationale for using a single-source dataset are documented in the methodology discussion within [analysis.ipynb](analysis.ipynb).
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Author
+
+**Vishal Jaiswal**  
+B.Tech in Computer Science & Engineering  
+Jaypee Institute of Information Technology  
+
+[LinkedIn](https://www.linkedin.com/in/vishal-jaiswal-/) • [GitHub](https://github.com/vishaljaiswal14)

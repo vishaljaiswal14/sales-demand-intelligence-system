@@ -2,22 +2,18 @@
 
 An end-to-end retail forecasting and demand intelligence system. Implements statistical time-series models, machine learning anomaly detection, and product segmentation on four years of historical transaction data, served via an interactive dashboard and an executive business report.
 
-[![Python](https://img.shields.io/badge/Python-3.9%2B-blue?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)](https://streamlit.io/)
-[![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-ORANGE?style=flat-square&logo=jupyter&logoColor=white)](https://jupyter.org/)
-[![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?style=flat-square&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
-[![XGBoost](https://img.shields.io/badge/XGBoost-Gradient%20Boosting-2F80ED?style=flat-square)](https://xgboost.readthedocs.io/)
-[![Prophet](https://img.shields.io/badge/Prophet-Forecasting-blue?style=flat-square)](https://facebook.github.io/prophet/)
-[![Statsmodels](https://img.shields.io/badge/Statsmodels-Time%20Series-green?style=flat-square)](https://www.statsmodels.org/)
-[![Plotly](https://img.shields.io/badge/Plotly-Charts-3F4F75?style=flat-square&logo=plotly&logoColor=white)](https://plotly.com/)
-
----
-
-## Technologies
-
-`Python` `Pandas` `NumPy` `scikit-learn` `Statsmodels` `SARIMA` `Prophet` `XGBoost` `Isolation Forest` `K-Means` `PCA` `Plotly` `Matplotlib` `Seaborn` `Streamlit` `Jupyter Notebook` `Machine Learning` `Time Series Forecasting` `Retail Analytics` `Business Intelligence` `Data Visualization` `Feature Engineering`
-
----
+<p align="center">
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.9%2B-blue?style=flat-square&logo=python&logoColor=white" alt="Python"></a>
+  <a href="https://pandas.pydata.org/"><img src="https://img.shields.io/badge/Pandas-Dataframe-150458?style=flat-square&logo=pandas&logoColor=white" alt="Pandas"></a>
+  <a href="https://numpy.org/"><img src="https://img.shields.io/badge/NumPy-Math-013243?style=flat-square&logo=numpy&logoColor=white" alt="NumPy"></a>
+  <a href="https://scikit-learn.org/"><img src="https://img.shields.io/badge/scikit--learn-ML-F7931E?style=flat-square&logo=scikit-learn&logoColor=white" alt="scikit-learn"></a>
+  <a href="https://www.statsmodels.org/"><img src="https://img.shields.io/badge/Statsmodels-Statistics-blue?style=flat-square" alt="Statsmodels"></a>
+  <a href="https://facebook.github.io/prophet/"><img src="https://img.shields.io/badge/Prophet-Time%20Series-blue?style=flat-square" alt="Prophet"></a>
+  <a href="https://xgboost.readthedocs.io/"><img src="https://img.shields.io/badge/XGBoost-ML-2F80ED?style=flat-square" alt="XGBoost"></a>
+  <a href="https://plotly.com/"><img src="https://img.shields.io/badge/Plotly-Charts-3F4F75?style=flat-square&logo=plotly&logoColor=white" alt="Plotly"></a>
+  <a href="https://streamlit.io/"><img src="https://img.shields.io/badge/Streamlit-App-FF4B4B?style=flat-square&logo=streamlit&logoColor=white" alt="Streamlit"></a>
+  <a href="https://jupyter.org/"><img src="https://img.shields.io/badge/Jupyter-Notebook-orange?style=flat-square&logo=jupyter&logoColor=white" alt="Jupyter Notebook"></a>
+</p>
 
 ## Table of Contents
 
@@ -125,24 +121,15 @@ sales-demand-intelligence-system/
 
 ## Technology Stack
 
-### Programming Language & Core Libraries
-- **Python (3.9+)**: Base execution runtime.
-- **pandas**: Tabular data manipulation, time-series resampling, and window-based aggregations.
-- **NumPy**: Linear algebra and vector calculations.
-- **SciPy**: Statistical tests (e.g., box-cox transformation search).
-
-### Time Series & Statistics
-- **statsmodels**: Implementation of SARIMA modeling, classical decomposition, ADF tests, and Ljung-Box diagnostic checks.
-- **Prophet**: Additive regression model for handling strong yearly seasonality.
-- **XGBoost**: Gradient boosted trees used as a machine learning alternative for regression-based time-series forecasting.
-
-### Machine Learning & Clustering
-- **scikit-learn**: Isolation Forest estimator for multi-dimensional anomaly detection, K-Means for clustering, and PCA for visualization.
-
-### Visualization & User Interface
-- **Plotly (Express & Graphic Objects)**: Engine for generating interactive charts in the Streamlit interface.
-- **Matplotlib & Seaborn**: Production of publication-quality static figures inside the analysis notebook.
-- **Streamlit**: Multi-page dashboard framework.
+| Category | Technologies | Purpose |
+| :--- | :--- | :--- |
+| **Programming Language** | Python (3.9+) | Base execution runtime for pipelines and dashboard application. |
+| **Data Processing** | pandas, NumPy, SciPy | Ingestion, data cleaning, datetime index management, resampling, and vector operations. |
+| **Time Series & Forecasting** | statsmodels, Prophet, XGBoost | SARIMA modeling, classical decomposition, additive regression, and gradient-boosted tree forecasting. |
+| **Machine Learning** | scikit-learn | Isolation Forest for anomaly detection and K-Means clustering for demand classification. |
+| **Data Visualization** | Plotly, Matplotlib, Seaborn | Interactive dashboard graphics, and static publication-quality figures for the notebook/report. |
+| **Dashboard Interface** | Streamlit | Multi-page layout, themes, and interactive dashboard state rendering. |
+| **Notebook & Environment** | Jupyter Notebook | Narrative workflow orchestration, modeling iteration, and diagnostic checks. |
 
 ---
 
